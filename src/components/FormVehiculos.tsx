@@ -1,55 +1,73 @@
 import { useState } from 'react'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
 import { useCalculate } from '../hooks/useCalculate'
 import useForm from '../hooks/useForm'
-import { vehicle } from '../interfaces/propsUseCalculate.interface'
+import {
+  PropsFormVehicule,
+  vehicle,
+} from '../interfaces/propsUseCalculate.interface'
 
 import SelectVehiculo from './SelectVehiculo'
 
-const FormVehiculos = () => {
+const FormVehiculos = ({ setTableDate }: PropsFormVehicule) => {
   const [vehicle, setVehicle]: [vehicle: vehicle, setVehicle: Function] =
     useState('Coche')
+
+  // const [tableDate, setTableDate] = useState([])
   const [formValue, handleInputChange]: any = useForm({ placa: '', dias: '0' })
   const { placa, dias } = formValue
   const { total } = useCalculate({ vehicle, dias })
   const handleSubmit = (e: any) => {
     e.preventDefault()
     console.log({ total })
-    alert(total)
+    // tableDate.push({ vehicle, dias, placa, total })
+    setTableDate((prev: []) => [...prev, { vehicle, dias, placa, total }])
   }
 
   return (
-    <Form>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="disabledSelect">Seleccione un vehiculo</Form.Label>
-        <SelectVehiculo setVehicle={setVehicle} />
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="disabledTextInput">Dias alquilar</Form.Label>
-        <input
-          type="text"
-          name="placa"
-          placeholder="Placa"
-          autoComplete="off"
-          onChange={handleInputChange}
-          value={placa}
-        />
-        <Form.Label htmlFor="disabledTextInput">Ingresar Placa </Form.Label>
-        <input
-          type="text"
-          name="dias"
-          placeholder="Dias"
-          autoComplete="off"
-          onChange={handleInputChange}
-          value={dias}
-        />
-      </Form.Group>
-
-      <Button onClick={handleSubmit} type="submit">
-        Calcular
-      </Button>
-    </Form>
+    <form className="mt-2">
+      <div className="form-row">
+        <div className="form-group col-md-8 mt-2">
+          <label>ALQUILER DE VEHICULOS</label>
+        </div>
+        <div className="form-group col-md-8 mt-2">
+          <label>Tipo de vehiculo</label>
+          <SelectVehiculo setVehicle={setVehicle} />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group col-md-8 mt-2">
+          <label>Placa del Vehiculo</label>
+          <input
+            type="text"
+            className="form-control"
+            name="placa"
+            placeholder="XDF-30E"
+            onChange={handleInputChange}
+            value={placa}
+          />
+        </div>
+        <div className="form-group col-md-8 mt-2">
+          <label>Dias Alquilar</label>
+          <input
+            type="text"
+            className="form-control"
+            name="dias"
+            placeholder="Dias alquilar"
+            onChange={handleInputChange}
+            value={dias}
+          />
+        </div>
+        <div className="form-group col-md-8  mt-3">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="btn btn-primary"
+          >
+            Calcular
+          </button>
+        </div>
+      </div>
+    </form>
   )
 }
 
